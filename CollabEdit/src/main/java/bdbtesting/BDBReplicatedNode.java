@@ -1,3 +1,4 @@
+package bdbtesting;
 import java.io.File;
 
 import com.sleepycat.je.Database;
