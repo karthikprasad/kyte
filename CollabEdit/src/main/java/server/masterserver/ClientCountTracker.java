@@ -1,4 +1,4 @@
-package masterserver;
+package server.masterserver;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class ClientCountTracker {
