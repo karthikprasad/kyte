@@ -1,7 +1,8 @@
-package server;
+package communication;
 
 import model.Message;
-import model.MesssageResponse;
+import model.MessageResponse;
+import server.MessageProcessor;
 
 public class RequestHandler {
 
@@ -11,7 +12,7 @@ public class RequestHandler {
 		this.messageProcessor = messageProcessor;
 	}
 
-	public MesssageResponse handleRequest(Message m)
+	public MessageResponse handleRequest(Message m)
 	{
 		return null;
 	}
