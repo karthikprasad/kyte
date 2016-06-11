@@ -64,9 +64,7 @@ public class TestBDB {
             DatabaseEntry theKey = new DatabaseEntry(key.getBytes("UTF-8"));
             DatabaseEntry theData = new DatabaseEntry(data.getBytes("UTF-8"));
             myDatabase.put(null, theKey, theData);
-            theData.setData("newData".getBytes("UTF-8"));
-            DatabaseEntry newKey = new DatabaseEntry("newKey".getBytes("UTF-8"));
-            myDatabase.put(null, newKey, theData);
+            System.out.println("Inserted");
         } catch (Exception e) {
         	System.out.println(e);
         }
@@ -94,14 +92,14 @@ public class TestBDB {
 //        } catch (Exception e) {
 //        	System.out.println(e);
 //        }
-//        System.out.println("Master sleeping");
-//        try {
-//			Thread.sleep(200000);
-//		} catch (InterruptedException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-//        System.out.println("Master done sleeping");
+        System.out.println("Master sleeping");
+        try {
+			Thread.sleep(300000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+        System.out.println("Master done sleeping");
 
         Cursor myCursor = null;
          
