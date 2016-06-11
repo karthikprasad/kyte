@@ -14,7 +14,7 @@ public class RequestHandler {
 
 	public MessageResponse handleRequest(Message m)
 	{
-		return null;
+		return messageProcessor.processMessage(m);
 	}
 	
 }

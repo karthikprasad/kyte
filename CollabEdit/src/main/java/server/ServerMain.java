@@ -2,6 +2,7 @@ package server;
 
 import java.io.File;
 
+import communication.MessageSender;
 import communication.RequestHandler;
 import db.PPSDBConnector;
 import model.PPSCache;
@@ -12,7 +13,10 @@ public class ServerMain {
 	RequestHandler requestHandler;
 	MessageProcessor messageProcessor;
 	PPSCache cache;
+	MessageSender sender;
+	ClientCounter clientCounter;
 	
+
 	private static ServerMain instance;
 	
 	private ServerMain(){}
@@ -24,6 +28,7 @@ public class ServerMain {
 		messageProcessor = new MessageProcessor(dbConnector);
 		requestHandler = new RequestHandler(messageProcessor);
 		cache = new PPSCache();
+		sender = new MessageSender(); 
 	}
 
 	public static ServerMain getInstance()
@@ -51,5 +56,21 @@ public class ServerMain {
 
 	public PPSCache getCache() {
 		return cache;
+	}
+	
+	public MessageSender getMessageSender(){
+		return sender;
+	}
+	public ClientCounter getClientCounter() {
+		return clientCounter;
+	}
+	
+	public void setClientCounter(ClientCounter clientCounter) {
+		this.clientCounter = clientCounter;
+	}
+
+	public void startDatabasePoller() {
+		// TODO Auto-generated method stub
+		
 	}
 }
