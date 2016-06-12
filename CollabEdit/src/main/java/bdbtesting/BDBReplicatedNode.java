@@ -32,10 +32,10 @@ public class BDBReplicatedNode {
 			ReplicationConfig repConfig = new ReplicationConfig();
 			repConfig.setGroupName("PlanetaryRepGroup");
 			repConfig.setNodeName("Jupiter");
-			repConfig.setNodeHostPort("localhost:5002");
+			repConfig.setNodeHostPort("192.168.0.12:5002");
 
 			// This is the first node, so its helper is itself
-			repConfig.setHelperHosts("localhost:5001");
+			repConfig.setHelperHosts("192.168.0.17:5001");
 
 			repEnv = new ReplicatedEnvironment(new File("src/main/resources/rep/repDbEnv"), repConfig,
 					envConfig);
@@ -52,21 +52,21 @@ public class BDBReplicatedNode {
 		// Insert
 		String key = "myKey";
 		String data = "myData";
-
-		try {
-			DatabaseEntry theKey = new DatabaseEntry(key.getBytes("UTF-8"));
-			DatabaseEntry theData = new DatabaseEntry(data.getBytes("UTF-8"));
-		} catch (Exception e) {
-			System.out.println(e);
-		}
-		System.out.println("Rep Node sleeping");
-		try {
-			Thread.sleep(50000);
-		} catch (InterruptedException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-		System.out.println("Rep done sleeping");
+//
+//		try {
+//			DatabaseEntry theKey = new DatabaseEntry(key.getBytes("UTF-8"));
+//			DatabaseEntry theData = new DatabaseEntry(data.getBytes("UTF-8"));
+//		} catch (Exception e) {
+//			System.out.println(e);
+//		}
+//		System.out.println("Rep Node sleeping");
+//		try {
+//			Thread.sleep(50000);
+//		} catch (InterruptedException e1) {
+//			// TODO Auto-generated catch block
+//			e1.printStackTrace();
+//		}
+//		System.out.println("Rep done sleeping");
 		// Read
 		try {
 			// Create two DatabaseEntry instances:

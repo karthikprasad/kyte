@@ -5,8 +5,7 @@ import java.util.TreeMap;
 
 import model.PPSCache;
 import model.PPSMessage;
-import server.ServerConfig;
-import server.ServerMain;
+import server.clientserver.ServerMain;
 
 /**
  * Wakes up after every POLLER_REFRESH_INTERVAL and polls the database for new PPS 

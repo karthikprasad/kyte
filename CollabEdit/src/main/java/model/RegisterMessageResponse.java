@@ -1,6 +1,6 @@
 package model;
 
-public class ReigsterMessageResponse extends MessageResponse {
+public class RegisterMessageResponse extends MessageResponse {
 
 	int numberOfClients;
 	int clientSerialNumber;

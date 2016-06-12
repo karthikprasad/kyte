@@ -1,4 +1,4 @@
-package server;
+package server.clientserver;
 
 public class ServerConfig {
 	public static final String ENV_HOME = "src/main/resources/rep/repDbEnv";

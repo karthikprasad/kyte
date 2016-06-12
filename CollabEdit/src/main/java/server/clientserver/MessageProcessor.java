@@ -1,10 +1,10 @@
-package server;
+package server.clientserver;
 
 import db.PPSDBConnector;
 import model.Message;
 import model.MessageResponse;
 import model.RegisterMessage;
-import model.ReigsterMessageResponse;
+import model.RegisterMessageResponse;
 
 public class MessageProcessor {
 
@@ -18,7 +18,7 @@ public class MessageProcessor {
 	{
 		if(m.getMessageType().equals(RegisterMessage.class))
 		{
-			ReigsterMessageResponse response = (ReigsterMessageResponse) ServerMain.getInstance()
+			RegisterMessageResponse response = (RegisterMessageResponse) ServerMain.getInstance()
 					.getMessageSender().sendMessageToMasterServer(m);
 			ClientCounter clientCounter = new ClientCounter(response.getClientSerialNumber(), response.getNumberOfClients());
 			ServerMain.getInstance().setClientCounter(clientCounter);
