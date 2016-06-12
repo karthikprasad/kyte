@@ -13,7 +13,7 @@ public class PerformOperation {
 	
 	@Path("/insert/{c}/{pos}")
 	@GET
-	@Produces("application/xml")
+	@Produces("application/json")
 	public String insertCharacter(@PathParam("c") Character c, @PathParam("pos") Double positionStamp) {
 		
 		ServerMain serverMain = ServerMain.getInstance();
@@ -25,12 +25,13 @@ public class PerformOperation {
 							   "<success>" + true + "</success>" +
 					         "</message>" +
 							"</collabedit>";
+		response = "{ 'messsage' : 'SUCCESS' }";
 		return response;
 	}
  
 	@Path("/delete/{pos}")
 	@GET
-	@Produces("application/xml")
+	@Produces("application/json")
 	public String deleteCharacter(@PathParam("pos") Double positionStamp) {
 		
 		ServerMain serverMain = ServerMain.getInstance();
@@ -42,6 +43,7 @@ public class PerformOperation {
 							   "<success>" + true + "</success>" +
 					         "</message>" +
 							"</collabedit>";
+		response = "{ 'messsage' : 'SUCCESS' }";
 		return response;
 	}	
 }

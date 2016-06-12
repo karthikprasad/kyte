@@ -1,6 +1,11 @@
 package model;
 
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.TreeMap;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class PPSMessage implements Message {
 
@@ -21,6 +26,20 @@ public class PPSMessage implements Message {
 
 	public void setPps(TreeMap<Double, Character> pps) {
 		this.pps = pps;
+	}
+	
+	public String toString() {
+		JSONObject json_obj=new JSONObject();
+        for (Entry<Double, Character> entry : pps.entrySet()) {
+            Double key = entry.getKey();
+            Character value = entry.getValue();
+            try {
+                json_obj.put(key.toString(), value);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        return json_obj.toString();
 	}
 
 }
