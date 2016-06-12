@@ -1,6 +1,7 @@
 package server.clientserver;
 
 import db.PPSDBConnector;
+import model.ClientUpdateMessage;
 import model.Message;
 import model.MessageResponse;
 import model.PPSCache;
@@ -30,6 +31,10 @@ public class MessageProcessor {
 		if(m.getMessageType().equals(WriteMessage.class))
 		{
 			return processWriteMessage((WriteMessage) m);
+		}
+		if (m.getMessageType().equals(ClientUpdateMessage.class)) {
+			ServerMain.getInstance().getMessageSender().sendMessageToClient(m);
+			return null;
 		}
 		return null;
 	}

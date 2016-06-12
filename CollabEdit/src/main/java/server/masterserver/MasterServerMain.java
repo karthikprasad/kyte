@@ -5,7 +5,6 @@ import java.io.File;
 import communication.MessageSender;
 import communication.RequestHandler;
 import db.PPSDBConnector;
-import model.PPSCache;
 import server.clientserver.MessageProcessor;
 import server.clientserver.ServerConfig;
 
@@ -14,7 +13,6 @@ public class MasterServerMain {
 	PPSDBConnector dbConnector;
 	RequestHandler requestHandler;
 	MessageProcessor messageProcessor;
-	PPSCache cache;
 	MessageSender sender;
 	
 private static MasterServerMain instance;
@@ -27,7 +25,6 @@ private static MasterServerMain instance;
 				ServerConfig.MASTER_NODE_NAME, ServerConfig.MASTER_NODE_HOST_PORT, ServerConfig.HELPER_HOST_PORT);
 		messageProcessor = new MasterMessageProcessor(dbConnector);
 		requestHandler = new RequestHandler(messageProcessor);
-		cache = new PPSCache();
 		sender = new MessageSender(); 
 	}
 
@@ -51,11 +48,6 @@ private static MasterServerMain instance;
 
 	public MessageProcessor getMessageProcessor() {
 		return messageProcessor;
-	}
-
-
-	public PPSCache getCache() {
-		return cache;
 	}
 	
 	public MessageSender getMessageSender(){

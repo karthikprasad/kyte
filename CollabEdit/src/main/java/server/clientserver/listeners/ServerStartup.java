@@ -1,4 +1,4 @@
-package communication;
+package server.clientserver.listeners;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;

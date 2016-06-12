@@ -1,4 +1,4 @@
-package communication;
+package server.clientserver.listeners;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;

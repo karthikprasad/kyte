@@ -1,4 +1,4 @@
-package communication;
+package server.clientserver.listeners;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -8,6 +8,7 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import model.RegisterMessage;
 import model.RegisterMessageResponse;
+import server.clientserver.ClientConnection;
 import server.clientserver.ServerMain;
 
 @Path("/RegisterClient")
@@ -21,6 +22,8 @@ public class RegisterClient {
 		newClient.onCompletion(() -> {ClientConnection.setClient(null);});
 		ClientConnection.setClient(newClient);
 		RegisterMessageResponse registerResponse = (RegisterMessageResponse) serverMain.getRequestHandler().handleRequest(new RegisterMessage());
+		ClientConnection.setNumClients(registerResponse.getNumberOfClients());
+		ClientConnection.setClientSerialNumber(registerResponse.getClientSerialNumber());
 		String response = "<collabedit>" + 
 							 "<message>" + 
 					           "<type>" + "registration" + "</type>" + 

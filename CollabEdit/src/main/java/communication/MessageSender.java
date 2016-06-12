@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import model.Message;
 import model.MessageResponse;
+import server.clientserver.ClientConnection;
 
 public class MessageSender {
 
