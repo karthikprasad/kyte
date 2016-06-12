@@ -5,6 +5,7 @@ import java.io.File;
 import communication.MessageSender;
 import communication.RequestHandler;
 import db.PPSDBConnector;
+import db.ScheduledDatabasePoller;
 import model.PPSCache;
 
 public class ServerMain {
@@ -70,7 +71,8 @@ public class ServerMain {
 	}
 
 	public void startDatabasePoller() {
-		// TODO Auto-generated method stub
-		
+		ScheduledDatabasePoller poller = new ScheduledDatabasePoller();
+		Thread t = new Thread(poller);
+		t.start();
 	}
 }
