@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Kyte Realtime</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
+</head>
+<body>
+<textarea id="page"></textarea>
+<button id="refreshPage">refreshPage</button>
+
+<!-- Le style-->
+<style type="text/css">
+    #page {
+        resize: none;
+        width: 90%;
+        height: 400px;
+    }
+</style>
+
+<script type="text/javascript">
+    //var PPSList = [];
+    var PPSList = [{"c":"a", "p":0}, {"c":"b", "p":1}, {"c":"\x01", "p":1.25}, {"c":"c", "p":1.4375}, {"c":"d", "p":2}];
+    var NUM_USERS = 2;
+    var USER_ORDER = 1;
+
+    //////////////////////////////////////////////////////////////////////////////////////////
+    // get cursor posiion
+    function getCursorPos() {
+        var cursorPos = $("#page").prop("selectionStart");
+        return cursorPos;
+    }
+    //////////////////////////////////////////////////////////////////////////////////////////
+
+    // set cursor position
+    function setSelectionRange(input, selectionStart, selectionEnd) {
+        if (input.setSelectionRange) {
+            input.focus();
+            input.setSelectionRange(selectionStart, selectionEnd);
+        }
+        else if (input.createTextRange) {
+            var range = input.createTextRange();
+            range.collapse(true);
+            range.moveEnd("character", selectionEnd);
+            range.moveStart("character", selectionStart);
+            range.select();
+        }
+    }
+    function setCursorPos(pos) {
+        setSelectionRange($("#page")[0], pos, pos);
+    }
+    //////////////////////////////////////////////////////////////////////////////////////////
+    function getNthVisibleCharIndex(n) {
+        // when n < 0; return the first visible char index
+        // when n > num_visble_chras, return the index of the last visible char
+        // if there are no visible chars, then visIndex field = -1
+        var visIndex = -1;
+        var i = 0;
+        for (i = 0; i < PPSList.length; i++) {
+            if (PPSList[i].c != "\x01") {
+                visIndex++;
+            }
+            if (visIndex >= n) {
+                break;
+            }
+        }
+        return {"i":i, "visIndex":visIndex};
+    }
+
+    function getNthVisibleCharPPS(n) {
+        // returns -1 if there is no visible charecter
+        var index = getNthVisibleCharIndex(n);
+        return PPSList[index.i].p;
+    }
+
+    function getVisibleIndexfromPPS(ppsVal) {
+        var visIndex = -1;
+        for (var i = 0; i < PPSList.length; i++) {
+            if (PPSList[i].c != "\x01") {
+                visIndex++;
+            }
+            if (PPSList[i].p == ppsVal) {
+                return {"i":i, "visIndex":visIndex};
+            }
+        }
+        return {"i":0, "visIndex":visIndex};
+
+    }
+    //////////////////////////////////////////////////////////////////////////////////////////
+
+    function refreshPage() {
+        // 1(a). get the current cursor position
+        var currentCursorPos = getCursorPos();
+        // 1(b). get the pps value of the nth visible char
+        var prevCharPPSVal = getNthVisibleCharPPS(currentCursorPos-1);
+        
+        // 2. iterate over the pps list and populate the page
+        var str = "";
+        for (var i = 0; i < PPSList.length; i++) {
+            if (PPSList[i].c != "\x01") {
+                str += PPSList[i].c;
+            }
+        }
+        alert(JSON.stringify(PPSList));
+        $("#page").val(str);
+
+        // 3. set cursor position to the corrrect place!
+        // do this getting the pos of the pps value
+        var newCursorPos = 0;        
+        // if the cursor was at the beginning, then there is no point in calculating thr new pos
+        if (currentCursorPos > 0) {
+            newCursorPos = getVisIndexfromPPS(prevCharPPSVal).visIndex + 1;
+        }
+        setCursorPos(newCursorPos);
+    }
+    //////////////////////////////////////////////////////////////////////////////////////////
+
+    function updatedView() {
+        var jsonStream = new EventSource("clientserver URL");
+        jsonStream.onmessage = function(e)
+        {
+            var message = JSON.parse(e.data);
+        }
+    }
+    //////////////////////////////////////////////////////////////////////////////////////////
+
+    function handleDelete(event) {
+        var delIndex = getNthVisibleCharIndex(cursorPos);
+        PPSList[delIndex].c = "\x01";
+        // if (PPSList.length > 0) {
+        //     var delIndex = -1;
+        //     for (var i = 0; i < PPSList.length; i++) {
+        //         // TODO: does not handle the case when you simply press backspace in the beginning
+        //         if (PPSList[i].c != "\x01") {
+        //             delIndex++;
+        //         }
+        //         if (delIndex == currentCursorPos)
+        //         {
+        //             PPSList[i].c = "\x01";
+        //             break;
+        //         }
+        //     }
+        // }
+    }
+
+    function handleInsert(event) {
+        
+        var prevPPS = MIN_PPS_VAL;
+        var nextPPS = MAX_PPS_VAL;
+        
+        // case when PPSList is empty is trivially handled
+        //// taken care by the initializations
+        // case when PPSList already has some values.
+        if (PPSList.length > 0)
+        {
+            var currentCursorPos = getCursorPos();  // cursor would have moved 1 place ahead after insert
+            var prevVisIndex = getNthVisibleCharIndex(currentCursorPos-2);
+            // there are no visible charecters in the PPS, 
+            if (prevVisIndex.visIndex == -1) {
+                // insert at the right most end
+                prevPPS = PPSList[PPSList.length-1].p;
+                nextPPS = MAX_PPS_VAL;
+            }
+            else {
+                // char added in the beginning
+                if (currentCursorPos == 1)
+                {
+                    prevPPS = MIN_PPS_VAL;
+                    nextPPS = PPSList[0].p;
+                }
+                else {
+                    prevPPS = PPSList[prevVisIndex.i].p;
+                    if (prevVisIndex.i == PPSList.length-1) {  // char added at the end
+                        nextPPS = MAX_PPS_VAL;  // case when no more charecters exist beyond this point
+                    }
+                    else {  // char added in the middle
+                        nextPPS = PPSList[prevVisIndex.i+1].p;
+                    }
+                }
+            }
+
+            // ppsrange to modify
+            var newPPSrange = (nextPPS - prevPPS) / NUM_USERS;
+            var newPPS = prevPPS + USER_ORDER*newPPSrange + (newPPSrange/2);
+
+            // add the object to the PPSList
+            var insPos = 0;
+            while (insPos < PPSList.length) {
+                if (PPSList[insPos].p > newPPS)
+                {
+                    break;
+                }
+                insPos++;
+            }
+            PPSList.splice(insPos, 0, {"p":newPPS, "c":charInserted});
+        }
+
+    }
+
+    // called on eevry key press
+    function updatePPSList(event) {
+        // determine the key pressed
+        var keyPressed = event.keyCode || event.which;
+        
+        // handle delete
+        if (keyPressed == 8) { // backspace
+            handleDelete();
+        }
+         // handle insert
+        else {  // some charecter inserted
+            if (keyPressed >= 65 && keyPressed <=90 && !event.shiftKey)
+            {
+                keyPressed += 32;
+            }
+            var charInserted = String.fromCharCode(keyPressed);
+            handleInsert(charInserted);
+            
+            // // initialize
+            // var prevPPS = 0;
+            // var nextPPS = 10;
+            // var newPPSindex = 0;
+
+            // // for (var i = 0; i < PPSList.length; i++) {
+            // //     if (PPSList[i].c != "\x01") {
+            // //         newPPSindex++;
+            // //     }
+            // //     if 
+            // // }
+
+
+
+            // // handle the case when the new element added is beyond the existing pps. insert at the end.
+            // if (PPSList.length > 0) {
+            //     if (currentCursorPos > PPSList.length) {
+            //         prevPPS = PPSList[PPSList.length-1].p;
+            //         nextPPS = 10;
+            //     }
+            //     else {
+            //         nextPPS = PPSList[0].p;
+            //         // determine the prev and next pps
+            //         for (var i=0; i < PPSList.length-1; i++) {
+            //             if (i == currentCursorPos-1) {
+            //                 break;
+            //             }
+            //             else if (PPSList[i].c != "\x01") {
+            //                 prevPPS = PPSList[i].p;
+            //                 nextPPS = PPSList[i+1].p;
+            //             }
+            //         }
+            //     }
+            // }
+            
+            // // ppsrange to modify
+            // var newPPSrange = (nextPPS - prevPPS) / NUM_USERS;
+            // var newPPS = prevPPS + USER_ORDER*newPPSrange + (newPPSrange/2);
+
+            // // add the object to the PPSList
+            // var insPos = 0;
+            // while (insPos < PPSList.length) {
+            //     if (PPSList[insPos].p > newPPS)
+            //     {
+            //         break;
+            //     }
+            //     insPos++;
+            // }
+            // PPSList.splice(insPos, 0, {"p":newPPS, "c":charInserted});
+        }
+        // refresh page
+        refreshPage();
+    }
+    //////////////////////////////////////////////////////////////////////////////////////////
+
+    $("#page")
+    .attr("unselectable", "on")
+    .css("-webkit-user-select", "none")
+    .css("-moz-user-select", "none")
+    .css("-ms-user-select", "none")
+    .css("-o-user-select", "none")
+    .css("user-select", "none")
+    .on("selectstart", false)
+    .on("keyup", updatePPSList);
+
+    $("#refreshPage").on("click", refreshPage);
+
+
+   
+</script>
+
+</body>
+</html>
