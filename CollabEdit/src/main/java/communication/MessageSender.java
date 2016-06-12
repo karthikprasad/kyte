@@ -1,5 +1,7 @@
 package communication;
 
+import java.io.IOException;
+
 import model.Message;
 import model.MessageResponse;
 
@@ -13,8 +15,12 @@ public class MessageSender {
 		return null;
 	}
 
-	public MessageResponse sendMessageToClient(Message m) {
-		return null;
+	public void sendMessageToClient(Message m) {
+		try {
+			ClientConnection.getClient().send(m);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 }

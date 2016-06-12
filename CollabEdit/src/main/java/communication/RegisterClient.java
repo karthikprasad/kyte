@@ -4,6 +4,8 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 
+import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
+
 import model.RegisterMessage;
 import model.RegisterMessageResponse;
 import server.clientserver.ServerMain;
@@ -15,6 +17,9 @@ public class RegisterClient {
 	@Produces("application/xml")
 	public String registerNewClient() {		
 		ServerMain serverMain = ServerMain.getInstance();
+		SseEmitter newClient = new SseEmitter();
+		newClient.onCompletion(() -> {ClientConnection.setClient(null);});
+		ClientConnection.setClient(newClient);
 		RegisterMessageResponse registerResponse = (RegisterMessageResponse) serverMain.getRequestHandler().handleRequest(new RegisterMessage());
 		String response = "<collabedit>" + 
 							 "<message>" + 
