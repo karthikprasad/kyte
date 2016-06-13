@@ -1,4 +1,4 @@
-package server.clientserver;
+package communication;
 
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 

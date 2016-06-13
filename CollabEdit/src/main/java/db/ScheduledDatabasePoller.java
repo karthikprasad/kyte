@@ -32,6 +32,13 @@ public class ScheduledDatabasePoller implements Runnable{
 
 	private void poll() {
 		TreeMap<Double, Character> dbEntries = ServerMain.getInstance().getDbConnector().getAllEntries();
+		
+		System.out.println("\n\n-----New ouput-----");
+		for(Entry<Double, Character> e: dbEntries.entrySet())
+		{
+			System.out.println(e.getKey() + " " + e.getValue());
+		}
+		
 		PPSCache cache = ServerMain.getInstance().getCache();
 		for(Entry<Double, Character> e: cache.getPps().entrySet())
 		{

@@ -1,20 +1,20 @@
-package server.clientserver.listeners;
+package server.clientserver.listeners.newclientupdate;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 
+import communication.ClientConnection;
 import model.ClientUpdateMessage;
-import server.clientserver.ClientConnection;
 import server.clientserver.ServerMain;
 
-@Path("/RegisterClient")
+@Path("/")
 public class NewClientUpdate {
  
 	@Path("/{n}")
 	@GET
-	@Produces("application/xml")
+	@Produces("application/json")
 	public String updateClientsInfo(@PathParam("n") int numClients) {		
 		ServerMain serverMain = ServerMain.getInstance();
 		
@@ -32,6 +32,7 @@ public class NewClientUpdate {
 							   "<clientSerialNumber>" + ClientConnection.getClientSerialNumber() + "</clientSerialNumber>" +
 					         "</message>" +
 							"</collabedit>";
+		response = "{\"message\": \"SUCCESS\"}";
 		return response;
 	}	
 }

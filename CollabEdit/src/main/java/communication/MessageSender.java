@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import org.json.JSONObject;
 import org.json.JSONTokener;
+import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
@@ -14,16 +15,17 @@ import model.MessageResponse;
 import model.RegisterMessage;
 import model.RegisterMessageResponse;
 import model.WriteMessage;
-import server.clientserver.ClientConnection;
+import server.clientserver.ServerConfig;
 
 public class MessageSender {
 
 	public MessageResponse sendMessageToMasterServer(Message m) {
 		if(m.getMessageType().equals(RegisterMessage.class)) {
+			RegisterMessage rm = (RegisterMessage) m;
 			Client client = Client.create();
 	
 			WebResource webResource = client
-			   .resource("http://localhost:8081/CollabEditServer/RegisterClient");
+			   .resource("http://localhost:8080/CollabEdit.MasterServer/RegisterClient/" + rm.getClientAddress());
 	
 			ClientResponse response = webResource.accept("application/json")
 	                   .get(ClientResponse.class);
@@ -36,8 +38,8 @@ public class MessageSender {
 			String output = response.getEntity(String.class);
 			
 			JSONObject jsonOutput = new JSONObject(new JSONTokener(output));
-			Integer clientSerialNumber = (Integer) jsonOutput.get("clientSerialNumber");
-			Integer numberOfClients = (Integer) jsonOutput.get("numberOfClients");
+			Integer clientSerialNumber = (Integer) jsonOutput.get("USER_ORDER");
+			Integer numberOfClients = (Integer) jsonOutput.get("NUM_USERS");
 			
 			return new RegisterMessageResponse(numberOfClients, clientSerialNumber);
 		}
@@ -45,7 +47,7 @@ public class MessageSender {
 			Client client = Client.create();
 			WriteMessage wm = (WriteMessage) m;
 			WebResource webResource = client
-			   .resource("http://localhost:8081/CollabEditServer/PerformOperation/insert/" + wm.getValue() + "/" + wm.getKey());
+			   .resource("http://localhost:8080/CollabEdit.MasterServer/PerformOperation/insert/" + wm.getValue() + "/" + wm.getKey());
 	
 			ClientResponse response = webResource.accept("application/json")
 	                   .get(ClientResponse.class);

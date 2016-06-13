@@ -11,7 +11,7 @@
   </welcome-file-list>
   <servlet>
     <servlet-name>Server Startup</servlet-name>
-    <servlet-class>communication.ServerStartup</servlet-class>
+    <servlet-class>temp.ServerStartup</servlet-class>
     <load-on-startup>1</load-on-startup>
   </servlet>
   <servlet-mapping>
@@ -21,9 +21,49 @@
   <servlet>
     <servlet-name>Register Client</servlet-name>
     <servlet-class>com.sun.jersey.spi.container.servlet.ServletContainer</servlet-class>
+    <init-param>
+    <param-name>com.sun.jersey.config.property.packages</param-name>
+    <param-value>server.clientserver.listeners.registeruser</param-value>
+    </init-param>
   </servlet>
   <servlet-mapping>
     <servlet-name>Register Client</servlet-name>
     <url-pattern>/RegisterClient/*</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>Perform Operation</servlet-name>
+    <servlet-class>com.sun.jersey.spi.container.servlet.ServletContainer</servlet-class>
+    <init-param>
+    <param-name>com.sun.jersey.config.property.packages</param-name>
+    <param-value>server.clientserver.listeners.performoperation</param-value>
+    </init-param>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>Perform Operation</servlet-name>
+    <url-pattern>/PerformOperation/*</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>Polling Subscription</servlet-name>
+    <servlet-class>com.sun.jersey.spi.container.servlet.ServletContainer</servlet-class>
+    <init-param>
+    <param-name>com.sun.jersey.config.property.packages</param-name>
+    <param-value>server.clientserver.listeners.pollingsubscription</param-value>
+    </init-param>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>Polling Subscription</servlet-name>
+    <url-pattern>/PollingSubscription/*</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>New Client Update</servlet-name>
+    <servlet-class>com.sun.jersey.spi.container.servlet.ServletContainer</servlet-class>
+    <init-param>
+    <param-name>com.sun.jersey.config.property.packages</param-name>
+    <param-value>server.clientserver.listeners.newclientupdate</param-value>
+    </init-param>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>New Client Update</servlet-name>
+    <url-pattern>/NewClientUpdate/*</url-pattern>
   </servlet-mapping>
 </web-app>

@@ -1,4 +1,4 @@
-package server.clientserver;
+package communication;
 
 import db.PPSDBConnector;
 import model.ClientUpdateMessage;
@@ -8,6 +8,8 @@ import model.PPSCache;
 import model.RegisterMessage;
 import model.RegisterMessageResponse;
 import model.WriteMessage;
+import server.clientserver.ClientCounter;
+import server.clientserver.ServerMain;
 
 public class MessageProcessor {
 
@@ -25,7 +27,7 @@ public class MessageProcessor {
 					.getMessageSender().sendMessageToMasterServer(m);
 			ClientCounter clientCounter = new ClientCounter(response.getClientSerialNumber(), response.getNumberOfClients());
 			ServerMain.getInstance().setClientCounter(clientCounter);
-			ServerMain.getInstance().startDatabasePoller();
+			//ServerMain.getInstance().startDatabasePoller();
 			return response;
 		}
 		if(m.getMessageType().equals(WriteMessage.class))
@@ -52,7 +54,7 @@ public class MessageProcessor {
 		cache.getPps().put(m.getKey(), m.getValue());
 		MessageResponse response = ServerMain.getInstance()
 				.getMessageSender().sendMessageToMasterServer(m);
-		if(response.isSuccess())
+		if(true /*&& response.isSuccess()*/)
 		{
 			cache.getPps().remove(m.getKey());
 		}

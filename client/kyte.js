@@ -267,9 +267,11 @@ function handleNewUser() {
 
 // message from client server with updated PPSList
 function handleUpdatedPPSList() {
-    var jsonStream = new EventSource("CHANGE_THIS_URL");
+	console.log("Here1");
+    var jsonStream = new EventSource("http://localhost:8180/CollabEdit.ClientServer/PollingSubscription", {withCredentials: false});
     jsonStream.onmessage = function(e)
     {
+    	console.log("Here");
         var message = JSON.parse(e.data);
         console.log(message);
     }
@@ -278,9 +280,9 @@ function handleUpdatedPPSList() {
 // Register with server on signup
 $(document).ready( function() {
     $.ajax({    type: "GET",
-                url: "REGISTER_URL",
+                url: "http://localhost:8180/CollabEdit.ClientServer/RegisterClient",
                 data: {"req_type": "register"},
-                dataType: "json",
+                dataType: "jsonp",
                 context: document.body,
                 success: function(response) {
                     if (response.message == "ERROR")
@@ -291,9 +293,13 @@ $(document).ready( function() {
                     PPSList = response.PPSList;
                     NUM_USERS = response.NUM_USERS;
                     USER_ORDER = response.USER_ORDER;
+                    console.log(NUM_USERS);
+                    alert(NUM_USERS);
+                    console.log(USER_ORDER);
+                    alert(USER_ORDER);
                 }
             });
     // start event listeners
-    handleNewUser();
+    //handleNewUser();
     handleUpdatedPPSList();
 });

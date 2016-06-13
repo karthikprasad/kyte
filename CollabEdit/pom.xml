@@ -3,6 +3,17 @@
   <groupId>CollabEdit</groupId>
   <artifactId>CollabEdit</artifactId>
   <version>0.0.1-SNAPSHOT</version>
+  <build>
+  <plugins>
+    <plugin>
+      <artifactId>maven-compiler-plugin</artifactId>
+        <configuration>
+          <source>1.8</source>
+          <target>1.8</target>
+        </configuration>
+    </plugin>
+  </plugins>
+</build>
   <dependencies>
     <dependency>
         <groupId>org.springframework</groupId>
@@ -47,12 +58,28 @@
   	<dependency>
   		<groupId>com.sun.jersey</groupId>
   		<artifactId>jersey-server</artifactId>
-  		<version>1.19</version>
+  		<version>1.19.1</version>
   	</dependency>
   	<dependency>
   		<groupId>com.sun.jersey</groupId>
   		<artifactId>jersey-core</artifactId>
   		<version>1.19.1</version>
+  	</dependency>
+  	<dependency>
+  		<groupId>com.sun.jersey</groupId>
+  		<artifactId>jersey-core</artifactId>
+  		<version>1.19.1</version>
+  	</dependency>
+  	<dependency>
+  		<groupId>net.sf.json-lib</groupId>
+  		<artifactId>json-lib</artifactId>
+  		<version>2.2.3</version>
+  		<classifier>jdk15</classifier>
+  	</dependency>
+  	<dependency>
+  		<groupId>CollabEdit.Common</groupId>
+  		<artifactId>CollabEdit.Common</artifactId>
+  		<version>0.0.1-SNAPSHOT</version>
   	</dependency>
   </dependencies>
 </project>

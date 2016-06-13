@@ -2,6 +2,7 @@ package server.clientserver;
 
 import java.io.File;
 
+import communication.MessageProcessor;
 import communication.MessageSender;
 import communication.RequestHandler;
 import db.PPSDBConnector;
