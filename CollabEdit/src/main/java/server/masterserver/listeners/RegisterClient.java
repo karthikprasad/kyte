@@ -15,12 +15,9 @@ import server.clientserver.ServerMain;
 public class RegisterClient {
  
 	@GET
-	@Produces("application/xml")
+	@Produces("application/json")
 	public String registerNewClient() {		
 		ServerMain serverMain = ServerMain.getInstance();
-		SseEmitter newClient = new SseEmitter();
-		newClient.onCompletion(() -> {ClientConnection.setClient(null);});
-		ClientConnection.setClient(newClient);
 		RegisterMessageResponse registerResponse = (RegisterMessageResponse) serverMain.getRequestHandler().handleRequest(new RegisterMessage());
 		ClientConnection.setNumClients(registerResponse.getNumberOfClients());
 		ClientConnection.setClientSerialNumber(registerResponse.getClientSerialNumber());
@@ -32,6 +29,9 @@ public class RegisterClient {
 					           "<numberOfClients>" + registerResponse.getNumberOfClients() + "</numberOfClients>" +
 					         "</message>" +
 							"</collabedit>";
+		response = "{ 'messsage' : 'SUCCESS'," + 
+					 "'NUM_USERS' : " + registerResponse.getNumberOfClients() + "," +
+				     "'USER_ORDER' : " + registerResponse.getClientSerialNumber() + "}";
 		return response;
 	}	
 }

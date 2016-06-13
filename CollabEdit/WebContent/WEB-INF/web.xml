@@ -18,7 +18,6 @@
     <servlet-name>Server Startup</servlet-name>
     <url-pattern>/ServerStartup/*</url-pattern>
   </servlet-mapping>
-  
   <servlet>
     <servlet-name>Register Client</servlet-name>
     <servlet-class>com.sun.jersey.spi.container.servlet.ServletContainer</servlet-class>
@@ -27,5 +26,4 @@
     <servlet-name>Register Client</servlet-name>
     <url-pattern>/RegisterClient/*</url-pattern>
   </servlet-mapping>
-  
 </web-app>
