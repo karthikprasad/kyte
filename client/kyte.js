@@ -252,42 +252,48 @@ $("#page")
 .on("selectstart", false)
 .on("keyup", updatePPSList);
 
-// Register with server on signup
-// $(document).ready( function() {
-//     $.ajax({    type: "GET",
-//                 url: "REGISTER_URL",
-//                 data: {"req_type": "register"},
-//                 dataType: "json",
-//                 context: document.body,
-//                 success: function(response) {
-//                     if (response.message == "ERROR")
-//                     {
-//                         alert("Problem connecting to the server!");
-//                         return;
-//                     }
-//                     PPSList = response.PPSList;
-//                     NUM_USERS = response.NUM_USERS;
-//                     USER_ORDER = response.USER_ORDER;
-//                 }
-//             });
-// });
-
 
 //////////////////////////////////////////////////////////////////////////////////////////
 
+// message from client server on a new user arrival
 function handleNewUser() {
-    var jsonStream = new EventSource("clientserver URL");
+    var jsonStream = new EventSource("CHANGE_THIS_URL");
     jsonStream.onmessage = function(e)
     {
         var message = JSON.parse(e.data);
+        console.log(message);
     }
 }
 
+// message from client server with updated PPSList
 function handleUpdatedPPSList() {
-    var jsonStream = new EventSource("clientserver URL");
+    var jsonStream = new EventSource("CHANGE_THIS_URL");
     jsonStream.onmessage = function(e)
     {
         var message = JSON.parse(e.data);
+        console.log(message);
     }
 }
 
+// Register with server on signup
+$(document).ready( function() {
+    $.ajax({    type: "GET",
+                url: "REGISTER_URL",
+                data: {"req_type": "register"},
+                dataType: "json",
+                context: document.body,
+                success: function(response) {
+                    if (response.message == "ERROR")
+                    {
+                        alert("Problem connecting to the server!");
+                        return;
+                    }
+                    PPSList = response.PPSList;
+                    NUM_USERS = response.NUM_USERS;
+                    USER_ORDER = response.USER_ORDER;
+                }
+            });
+    // start event listeners
+    handleNewUser();
+    handleUpdatedPPSList();
+});
