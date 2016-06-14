@@ -129,7 +129,15 @@ function refreshPage() {
     var str = "";
     for (var i = 0; i < PPSList.length; i++) {
         if (PPSList[i].c != "~") {
-            str += PPSList[i].c;
+            if (PPSList[i].c == "`") {
+                str += " ";
+            }
+            else if (PPSList[i].c == "|") {
+                str += "\n";
+            }
+            else {
+                str += PPSList[i].c;
+            }
         }
     }
     //alert(JSON.stringify(PPSList));
