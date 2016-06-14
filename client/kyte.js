@@ -3,7 +3,7 @@ var PPSList = [];
 var NUM_USERS = 2;
 var USER_ORDER = 1;
 var MIN_PPS_VAL = 0;
-var MAX_PPS_VAL = 10000000000000000;
+var MAX_PPS_VAL = 100000;
 
 //////////////////////////////////////////////////////////////////////////////////////////
 // get cursor posiion
@@ -39,7 +39,7 @@ function getNthVisibleCharIndex(n) {
     var visIndex = -1;
     var i = 0;
     for (i = 0; i < PPSList.length; i++) {
-        if (PPSList[i].c != "\x01") {
+        if (PPSList[i].c != "~") {
             visIndex++;
         }
         if (visIndex >= n) {
@@ -58,7 +58,7 @@ function getNthVisibleCharPPS(n) {
 function getVisibleIndexfromPPS(ppsVal) {
     var visIndex = -1;
     for (var i = 0; i < PPSList.length; i++) {
-        if (PPSList[i].c != "\x01") {
+        if (PPSList[i].c != "~") {
             visIndex++;
         }
         if (PPSList[i].p == ppsVal) {
@@ -109,6 +109,8 @@ function getActualKeyPressed(event) {
             case 188: if (event.shiftKey) {keyPressed = 60;} else {keyPressed = 44}; break;  // < ,
             case 190: if (event.shiftKey) {keyPressed = 62;} else {keyPressed = 46}; break;  // > .
             case 191: if (event.shiftKey) {keyPressed = 63;} else {keyPressed = 47}; break;  // ? /
+            case 13: keyPressed = "\n"; break;
+            case 32: keyPressed = 32; break;
             default: keyPressed = 0;
         }
     }
@@ -117,6 +119,7 @@ function getActualKeyPressed(event) {
 //////////////////////////////////////////////////////////////////////////////////////////
 
 function refreshPage() {
+	if (PPSList.length === 0) return;
     // 1(a). get the current cursor position
     var currentCursorPos = getCursorPos();
     // 1(b). get the pps value of the nth visible char
@@ -125,7 +128,7 @@ function refreshPage() {
     // 2. iterate over the pps list and populate the page
     var str = "";
     for (var i = 0; i < PPSList.length; i++) {
-        if (PPSList[i].c != "\x01") {
+        if (PPSList[i].c != "~") {
             str += PPSList[i].c;
         }
     }
@@ -147,7 +150,7 @@ function refreshPage() {
 function handleDelete() {
     var currentCursorPos = getCursorPos();
     var delIndex = getNthVisibleCharIndex(currentCursorPos).i;
-    PPSList[delIndex].c = "\x01";
+    PPSList[delIndex].c = "~";
     return {"p":PPSList[delIndex].p, "c":PPSList[delIndex].c};
 }
 
@@ -189,7 +192,7 @@ function handleInsert(charInserted) {
     }
     // ppsrange to modify
     var newPPSrange = (nextPPS - prevPPS) / NUM_USERS;
-    var newPPS = prevPPS + USER_ORDER*newPPSrange + (newPPSrange/2);
+    var newPPS = prevPPS + (USER_ORDER - 1)*newPPSrange + (newPPSrange/2);
     console.log("newPPS: " + newPPS);
 
     // add the object to the PPSList
@@ -219,30 +222,35 @@ function updatePPSList(event) {
         update = handleDelete();
     }
      // handle insert
-    else {  // some charecter inserted
-        if (keyPressed != 0) {
-            var charInserted = String.fromCharCode(keyPressed);
-            update = handleInsert(charInserted);
-        }
+    else if (keyPressed != 0) {
+    	var charInserted;
+    	if (keyPressed == 13) {
+    		charInserted = "\n";
+    	}
+        charInserted = String.fromCharCode(keyPressed);
+        update = handleInsert(charInserted);
     }
     console.log(JSON.stringify(PPSList));
     // refresh page
     refreshPage();
     // send the update to server
-    //sendUpdate(update);
+    sendUpdate(update);
 }
 //////////////////////////////////////////////////////////////////////////////////////////
 
 function sendUpdate(update) {
+	var requestUrl = "http://192.168.0.23:8380/CollabEdit.ClientServer/PerformOperation/insert/" + encodeURI(update.c) + "/" + update.p;
+	console.log(requestUrl);
     $.ajax({
                 type: "GET",
-                url: "localhost:8080/perform_op/",
-                data: update,
+                url: requestUrl,
+                //data: update,
                 dataType: "json",
                 success: function(response) {
                     if (response.message == "ERROR") {
                         alert("Problem with the server!");
                     }
+                    console.log(response);
                 }
             });
 }
@@ -255,27 +263,32 @@ $("#page")
 
 //////////////////////////////////////////////////////////////////////////////////////////
 
-(function pollState() {
+function pollState() {
     $.ajax({
-        url: "http://localhost:8180/CollabEdit.ClientServer/GetUpdatedPPS",
+        url: "http://192.168.0.23:8380/CollabEdit.ClientServer/GetUpdatedPPS",
         type: "GET",
         success: function(data) {
             console.log(data);
+            console.log(data.PPSList);
+            PPSList = data.PPSList;
+            NUM_USERS = 2/*data.NUM_USERS*/;
+            USER_ORDER = data.USER_ORDER;
+            refreshPage();
         },
-        dataType: "jsonp",
-        complete: setTimeout(function() {pollState()}, 1000),
+        dataType: "json",
+        //complete: setTimeout(function() {pollState()}, 1000),
         timeout: 1000
     })
-})();
+};
 
 
 // Register with server on signup
 $(document).ready( function() {
     console.log('here');
     $.ajax({    type: "GET",
-                url: "http://localhost:8180/CollabEdit.ClientServer/RegisterClient",
-                dataType: "jsonp",
-                context: document.body,
+                url: "http://192.168.0.23:8380/CollabEdit.ClientServer/RegisterClient",
+                dataType: "json",
+                /*context: document.body,*/
                 success: function(response) {
                     console.log('success');
                     console.log(response);
@@ -285,7 +298,7 @@ $(document).ready( function() {
                         return;
                     }
                     PPSList = response.PPSList;
-                    NUM_USERS = response.NUM_USERS;
+                    NUM_USERS = 2/*response.NUM_USERS*/;
                     USER_ORDER = response.USER_ORDER;
                     console.log(NUM_USERS);
                     alert(NUM_USERS);
@@ -296,4 +309,5 @@ $(document).ready( function() {
     // start event listeners
     //handleNewUser();
     //handleUpdatedPPSList();
+    pollState();
 });
