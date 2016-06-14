@@ -1,6 +1,7 @@
 package communication;
 
 import java.io.IOException;
+import java.net.URLEncoder;
 
 import org.json.JSONObject;
 import org.json.JSONTokener;
@@ -47,7 +48,7 @@ public class MessageSender {
 			Client client = Client.create();
 			WriteMessage wm = (WriteMessage) m;
 			WebResource webResource = client
-			   .resource("http://localhost:8080/CollabEdit.MasterServer/PerformOperation/insert/" + wm.getValue() + "/" + wm.getKey());
+			   .resource("http://localhost:8080/CollabEdit.MasterServer/PerformOperation/insert/" + URLEncoder.encode(wm.getValue().toString()) + "/" + wm.getKey());
 	
 			ClientResponse response = webResource.accept("application/json")
 	                   .get(ClientResponse.class);

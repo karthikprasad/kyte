@@ -38,7 +38,7 @@ public class RegisterClient {
             Double key = entry.getKey();
             Character value = entry.getValue();
             try {
-                json_obj.put("p", key.toString());
+                json_obj.put("p", key);
                 json_obj.put("c", value.toString());
                 jsonObjList.add(json_obj.toString());
                 if (!firstTime) {

@@ -15,7 +15,7 @@ public class PerformOperation {
 	@GET
 	@Produces("application/json")
 	public String insertCharacter(@PathParam("c") String c, @PathParam("pos") Double positionStamp) {
-		
+		System.out.println("Inside master server perform operation");
 		MasterServerMain masterServerMain = MasterServerMain.getInstance();
 		masterServerMain.getRequestHandler().handleRequest(new WriteMessage(positionStamp, c.charAt(0)));
   

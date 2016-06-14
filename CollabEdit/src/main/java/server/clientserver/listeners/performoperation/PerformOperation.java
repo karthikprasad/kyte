@@ -20,7 +20,7 @@ public class PerformOperation {
 	@GET
 	@Produces("application/json")
 	public String insertCharacter(@PathParam("c") String c, @PathParam("pos") Double positionStamp/*, @QueryParam("callback") String callback*/, @Context HttpServletResponse httpResponse) {
-		System.out.println("Inside Perform Operation for client");
+		System.out.println("Inside Perform Operation for client 1 " + c);
 		ServerMain serverMain = ServerMain.getInstance();
 		serverMain.getRequestHandler().handleRequest(new WriteMessage(positionStamp, c.charAt(0)));
 		
