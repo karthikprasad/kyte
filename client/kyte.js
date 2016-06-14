@@ -236,7 +236,7 @@ function updatePPSList(event) {
 function sendUpdate(update) {
     $.ajax({
                 type: "GET",
-                url: "UPDATE_URL",
+                url: "localhost:8080/perform_op/",
                 data: update,
                 dataType: "json",
                 success: function(response) {
@@ -255,36 +255,30 @@ $("#page")
 
 //////////////////////////////////////////////////////////////////////////////////////////
 
-// message from client server on a new user arrival
-function handleNewUser() {
-    var jsonStream = new EventSource("CHANGE_THIS_URL");
-    jsonStream.onmessage = function(e)
-    {
-        var message = JSON.parse(e.data);
-        console.log(message);
-    }
-}
+(function pollState() {
+    $.ajax({
+        url: "<CHANGE_THIS_URL>",
+        type: "GET",
+        success: function(data) {
+            console.log(data);
+        },
+        dataType: "jsonp",
+        complete: setTimeout(function() {pollState()}, 1000),
+        timeout: 1000
+    })
+})();
 
-// message from client server with updated PPSList
-function handleUpdatedPPSList() {
-	console.log("Here1");
-    var jsonStream = new EventSource("http://localhost:8180/CollabEdit.ClientServer/PollingSubscription", {withCredentials: false});
-    jsonStream.onmessage = function(e)
-    {
-    	console.log("Here");
-        var message = JSON.parse(e.data);
-        console.log(message);
-    }
-}
 
 // Register with server on signup
 $(document).ready( function() {
+    console.log('here');
     $.ajax({    type: "GET",
-                url: "http://localhost:8180/CollabEdit.ClientServer/RegisterClient",
-                data: {"req_type": "register"},
+                url: "http://127.0.0.1:8080/register/",
                 dataType: "jsonp",
                 context: document.body,
                 success: function(response) {
+                    console.log('success');
+                    console.log(response);
                     if (response.message == "ERROR")
                     {
                         alert("Problem connecting to the server!");
@@ -301,5 +295,5 @@ $(document).ready( function() {
             });
     // start event listeners
     //handleNewUser();
-    handleUpdatedPPSList();
+    //handleUpdatedPPSList();
 });
