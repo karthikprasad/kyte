@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd" version="3.0">
-  <display-name>CollabEdit</display-name>
+  <display-name>CollabEdit.MasterServer</display-name>
   <welcome-file-list>
     <welcome-file>index.html</welcome-file>
     <welcome-file>index.htm</welcome-file>
@@ -23,7 +23,7 @@
     <servlet-class>com.sun.jersey.spi.container.servlet.ServletContainer</servlet-class>
     <init-param>
     <param-name>com.sun.jersey.config.property.packages</param-name>
-    <param-value>server.clientserver.listeners.registeruser</param-value>
+    <param-value>server.masterserver.listeners.registerclient</param-value>
     </init-param>
   </servlet>
   <servlet-mapping>
@@ -35,35 +35,11 @@
     <servlet-class>com.sun.jersey.spi.container.servlet.ServletContainer</servlet-class>
     <init-param>
     <param-name>com.sun.jersey.config.property.packages</param-name>
-    <param-value>server.clientserver.listeners.performoperation</param-value>
+    <param-value>server.masterserver.listeners.performoperation</param-value>
     </init-param>
   </servlet>
   <servlet-mapping>
     <servlet-name>Perform Operation</servlet-name>
     <url-pattern>/PerformOperation/*</url-pattern>
-  </servlet-mapping>
-  <servlet>
-    <servlet-name>Get Updated PPS</servlet-name>
-    <servlet-class>com.sun.jersey.spi.container.servlet.ServletContainer</servlet-class>
-    <init-param>
-    <param-name>com.sun.jersey.config.property.packages</param-name>
-    <param-value>server.clientserver.listeners.getupdatedpps</param-value>
-    </init-param>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>Get Updated PPS</servlet-name>
-    <url-pattern>/GetUpdatedPPS/*</url-pattern>
-  </servlet-mapping>
-  <servlet>
-    <servlet-name>New Client Update</servlet-name>
-    <servlet-class>com.sun.jersey.spi.container.servlet.ServletContainer</servlet-class>
-    <init-param>
-    <param-name>com.sun.jersey.config.property.packages</param-name>
-    <param-value>server.clientserver.listeners.newclientupdate</param-value>
-    </init-param>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>New Client Update</servlet-name>
-    <url-pattern>/NewClientUpdate/*</url-pattern>
   </servlet-mapping>
 </web-app>

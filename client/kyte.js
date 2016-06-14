@@ -257,7 +257,7 @@ $("#page")
 
 (function pollState() {
     $.ajax({
-        url: "<CHANGE_THIS_URL>",
+        url: "http://localhost:8180/CollabEdit.ClientServer/GetUpdatedPPS",
         type: "GET",
         success: function(data) {
             console.log(data);
@@ -273,7 +273,7 @@ $("#page")
 $(document).ready( function() {
     console.log('here');
     $.ajax({    type: "GET",
-                url: "http://127.0.0.1:8080/register/",
+                url: "http://localhost:8180/CollabEdit.ClientServer/RegisterClient",
                 dataType: "jsonp",
                 context: document.body,
                 success: function(response) {

@@ -18,12 +18,12 @@ public class NewClientUpdate {
 	public String updateClientsInfo(@PathParam("n") int numClients) {		
 		ServerMain serverMain = ServerMain.getInstance();
 		
+//		ClientConnection.setNumClients(numClients);
+//		if (numClients < ClientConnection.getClientSerialNumber()) {
+//			ClientConnection.setClientSerialNumber(numClients);
+//		}
+//		serverMain.getRequestHandler().handleRequest(new ClientUpdateMessage(numClients, ClientConnection.getClientSerialNumber()));
 		ClientConnection.setNumClients(numClients);
-		if (numClients < ClientConnection.getClientSerialNumber()) {
-			ClientConnection.setClientSerialNumber(numClients);
-		}
-		serverMain.getRequestHandler().handleRequest(new ClientUpdateMessage(numClients, ClientConnection.getClientSerialNumber()));
-		
 		// The following is not really needed
 		String response = "<collabedit>" + 
 							 "<message>" + 

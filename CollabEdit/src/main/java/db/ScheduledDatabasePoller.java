@@ -30,7 +30,7 @@ public class ScheduledDatabasePoller implements Runnable{
 		}
 	}
 
-	private void poll() {
+	public static TreeMap<Double, Character> poll() {
 		TreeMap<Double, Character> dbEntries = ServerMain.getInstance().getDbConnector().getAllEntries();
 		
 		System.out.println("\n\n-----New ouput-----");
@@ -46,7 +46,8 @@ public class ScheduledDatabasePoller implements Runnable{
 		}
 		PPSMessage m = new PPSMessage();
 		m.setPps(dbEntries);
-		ServerMain.getInstance().getMessageSender().sendMessageToClient(m);
+		return dbEntries;
+		//ServerMain.getInstance().getMessageSender().sendMessageToClient(m);
 	}
 	
 }

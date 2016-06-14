@@ -1,10 +1,11 @@
-package server.clientserver.listeners.registeruser;
+package server.clientserver.listeners.getupdatedpps;
 
+import java.util.TreeMap;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.TreeMap;
 import java.util.Map.Entry;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -17,16 +18,19 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
-//import com.sun.jersey.api.json.JSONWithPadding;
+import com.sun.jersey.api.json.JSONWithPadding;
+
+import org.springframework.http.MediaType;
 
 import communication.ClientConnection;
+import db.ScheduledDatabasePoller;
 import model.RegisterMessage;
 import model.RegisterMessageResponse;
 import server.clientserver.ServerConfig;
 import server.clientserver.ServerMain;
 
 @Path("/")
-public class RegisterClient {
+public class GetUpdatedPPS {
 	
 	private String mapToString(TreeMap<Double, Character> pps) {
 		JSONObject json_obj;
@@ -55,33 +59,26 @@ public class RegisterClient {
 	}
  
 	@GET
-	@Produces("application/json")
-	public String registerNewClient(/*@QueryParam("callback") String callback*/@Context HttpServletResponse httpResponse) {		
-		ServerMain serverMain = ServerMain.getInstance();
+	@Produces("appliction/json")
+	public String getUpdatedPPSFromDB(@Context HttpServletResponse httpResponse/*, @QueryParam("callback") String callback*/) {		
+		//ServerMain serverMain = ServerMain.getInstance();
 		//SseEmitter newClient = new SseEmitter();
 		//newClient.onCompletion(() -> {ClientConnection.setClient(null);});
 		//ClientConnection.setClient(newClient);
-		RegisterMessageResponse registerResponse = (RegisterMessageResponse) serverMain.getRequestHandler().handleRequest(new RegisterMessage(ServerConfig.NODE_ADDRESS_FOR_CLIENT_UPDATES));
-		ClientConnection.setNumClients(registerResponse.getNumberOfClients());
-		ClientConnection.setClientSerialNumber(registerResponse.getClientSerialNumber());
-		String response = "<collabedit>" + 
-							 "<message>" + 
-					           "<type>" + "registration" + "</type>" + 
-							   "<success>" + true + "</success>" +
-							   "<clientSerialNumber>" + registerResponse.getClientSerialNumber() + "</clientSerialNumber>" +
-					           "<numberOfClients>" + registerResponse.getNumberOfClients() + "</numberOfClients>" +
-					         "</message>" +
-							"</collabedit>";
-		response = "{ \"messsage\" : \"SUCCESS\"," + 
-				 "\"NUM_USERS\" : " + registerResponse.getNumberOfClients() + "," +
-			     "\"USER_ORDER\" : " + registerResponse.getClientSerialNumber() + "," +
-			     "\"PPSList\" : " + mapToString(serverMain.getDbConnector().getAllEntries()) + "}";
-		//JSONWithPadding resp = new JSONWithPadding(response, callback);
+		//ServerMain.getInstance().startDatabasePoller();
 		httpResponse.addHeader("Access-Control-Allow-Origin", "*");
 		httpResponse.addHeader("Access-Control-Expose-Headers", "*");
 		httpResponse.addHeader("Access-Control-Allow-Credentials", "false");
+		//httpResponse.setContentType("text/event-stream");	
+		//encoding must be set to UTF-8
+		httpResponse.setCharacterEncoding("UTF-8");
+		String response = "{ \"messsage\" : \"SUCCESS\"," + 
+				 "\"NUM_USERS\" : " + ClientConnection.getNumClients() + "," +
+			     "\"USER_ORDER\" : " + ClientConnection.getClientSerialNumber() + "," +
+			     "\"PPSList\" : " + mapToString(ScheduledDatabasePoller.poll()) + "}";
+		
+		//JSONWithPadding resp = new JSONWithPadding("{ \"data\" : " + mapToString(ScheduledDatabasePoller.poll()) + "}", callback);
 		return response;
-//		return response;
 	}	
 }
 
