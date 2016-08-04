@@ -233,7 +233,7 @@ function updatePPSList(event) {
     else if (keyPressed != 0) {
     	var charInserted;
     	if (keyPressed == 13) {
-    		charInserted = "\n";
+    		charInserted = "|";
     	}
         charInserted = String.fromCharCode(keyPressed);
         update = handleInsert(charInserted);
@@ -315,7 +315,7 @@ $(document).ready( function() {
                 }
             });
     // start event listeners
-    //handleNewUser();
-    //handleUpdatedPPSList();
+    handleNewUser();
+    handleUpdatedPPSList();
     pollState();
 });

@@ -1,0 +1,11 @@
+160613 18:22:57:718 INFO [Replicated] Started ServiceDispatcher. HostPort=localhost:5002
+160613 18:22:58:108 INFO [Replicated] Current group size: 0
+160613 18:22:58:108 INFO [Replicated] New node Replicated(-1) unknown to rep group
+160613 18:22:58:130 INFO [Replicated] Releasing commit block latch
+160613 18:22:58:130 INFO [Replicated] Shutting down node Replicated(-1)
+160613 18:22:58:131 INFO [Replicated] Elections shutdown initiated
+160613 18:22:58:132 INFO [Replicated] Elections shutdown completed
+160613 18:22:58:132 INFO [Replicated] RepNode main thread: RepNode Replicated(-1) exited.
+160613 18:22:58:134 INFO [Replicated] ServiceDispatcher shutdown starting. HostPort=localhost:5002 Registered services: []
+160613 18:22:58:137 INFO [Replicated] ServiceDispatcher shutdown completed. HostPort=localhost:5002
+160613 18:22:58:137 INFO [Replicated] Replicated(-1) shutdown completed.
